@@ -11,7 +11,7 @@ select ceiling(3.14); #切り上げ
 select rand(); #0~1
 select floor(rand()*10) #0~10
 
-#power　べき乗
+#power べき乗
 
 select power(3,4);
 
