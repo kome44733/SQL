@@ -91,13 +91,16 @@ scoreカラムに、testsテーブルの各行のtest_score_1, test_score_2, tes
 
 alter table tests_score add score INT;
 
-update tests_score set score = COALESCE(test_score_1,test_score_2,test_score_3),
+select *,COALESCE(test_score_1,test_score_2,test_score_3)*1.2 from tests_score;
+
+update tests_score set score =
     case
-        when score = score > 900 then floor(score * 1.2)
-        when score = score < 600 then ceiling(score * 0.8)
-    end
-from 
-update tests_score 
+        when COALESCE(test_score_1,test_score_2,test_score_3) > 600 then floor(COALESCE(test_score_1,test_score_2,test_score_3) * 1.2)
+        when COALESCE(test_score_1,test_score_2,test_score_3) < 900 then ceiling(COALESCE(test_score_1,test_score_2,test_score_3) * 0.8)
+        else COALESCE(test_score_1,test_score_2,test_score_3)
+    end;
+   
+select * from tests_score;
 
 
 
