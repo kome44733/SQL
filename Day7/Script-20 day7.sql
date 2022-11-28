@@ -105,3 +105,16 @@ select * from tests_score;
 
 
 13. employeesテーブルを、 departmentが、マーケティング部 、研究部、開発部、総務部、営業部、経理部の順になるように並び替えて表示してください。
+
+
+select *
+from employees
+order by
+    case department
+        when "マーケティング部" then 0
+        when "研究部" then 1
+        when "開発部" then 2
+        when "総務部" then 3
+        when "営業部" then 4
+        when "経理部" then 5
+    end;
