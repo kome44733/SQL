@@ -140,21 +140,47 @@ group by concat(c.last_name,c.first_name);
 employeesテーブルとsalariesテーブルを紐づけます。
 EXISTSとINとINNER JOIN、それぞれの方法で記載してください
 
+select * from employees
+where id in(select employee_id from salaries where payment > 9000000);
 
+select distinct e.* from employees e 
+inner join salaries s 
+on e.id = s.employee_id
+where s.payment > 9000000;
 
-
-
-
-
+select * from employees e 
+where 
+exists(
+select 
+1
+from 
+salaries s 
+where e.id = s.employee_id and s.payment >9000000
+);
 
 
 8. employeesテーブルから、salariesテーブルと紐づけのできないレコードを取り出してください。
 EXISTSとINとLEFT JOIN、それぞれの方法で記載してください
 
+select * from employees
+where id not in(select employee_id from salaries);
+
+select * from employees e 
+left join salaries s 
+on e.id =s.employee_id 
+where s.id is null;
 
 
-
-
+select *  from employees e 
+where 
+not exists(
+select 
+1
+from
+salaries s 
+where 
+s.employee_id =e.id 
+);
 
 
 
@@ -165,20 +191,21 @@ employeesテーブルのageが、最小age未満のものは最小未満、最�
 平均age以上で最大age未満のものは最大未満、それ以外はその他と表示します
 WITH句を用いて記述します
 
-
-
-
-
-
-
-
-
-10. customersテーブルからageが50よりも大きいレコードを取り出して、ordersテーブルと連結します。
-customersテーブルのidに対して、ordersテーブルのorder_amount*order_priceのorder_date毎の合計値。
-合計値の7日間平均値、合計値の15日平均値、合計値の30日平均値を計算します。
-7日間平均、15日平均値、30日平均値が計算できない区間(対象よりも前の日付のデータが十分にない区間)は、空白を表示してください。
-
-
+with customers_age as(
+select max(age) as max_age, min(age)as min_age,avg(age) as avg_age
+from customers
+)
+select
+* ,
+case 
+	when e.age < ca.min_age then "最小未満"
+	when e.age < ca.avg_age then "平均未満"
+	when e.age < ca.max_age then "最大未満"
+	else "その他"
+end
+from 
+employees e 
+cross join customers_age as ca;
 
 
 
